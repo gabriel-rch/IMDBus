@@ -4,23 +4,23 @@
 
 CREATE TABLE Motoristas (
 	id_motorista SERIAL PRIMARY KEY,
-	matricula CHAR(10) UNIQUE NOT NULL,
-	nome VARCHAR(100),
+	matricula CHAR(5) UNIQUE NOT NULL,
 	cpf CHAR(11) UNIQUE NOT NULL,
+	nome VARCHAR(100),
 	data_nascimento DATE
 );
 
 CREATE TABLE Passageiros (
 	id_passageiro SERIAL PRIMARY KEY,
-	nome VARCHAR(100),
 	cpf CHAR(11) UNIQUE NOT NULL,
+	nome VARCHAR(100),
 	data_nascimento DATE NOT NULL,
 	beneficio VARCHAR(10) CHECK(beneficio IN ('INTEIRA', 'MEIA', 'GRATUITA'))
 );
 
 CREATE TABLE Onibus (
 	id_onibus SERIAL PRIMARY KEY,
-	registro VARCHAR(10) UNIQUE NOT NULL,
+	placa VARCHAR(10) UNIQUE NOT NULL,
 	marca VARCHAR(50),
 	modelo VARCHAR(50),
 	quilometragem INT,
@@ -40,7 +40,7 @@ CREATE TABLE Linhas (
 	origem VARCHAR(50),
 	destino VARCHAR(50),
 	duracao INTERVAL NOT NULL,
-	extensao INT NOT NULL,
+	extensao_km INT NOT NULL,
 	id_tarifa INT REFERENCES Tarifas
 );
 
