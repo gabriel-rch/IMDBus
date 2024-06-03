@@ -8,6 +8,19 @@ def get_sql_files(directory):
         for file in files:
             if file.endswith(".sql"):
                 sql_files.append(os.path.join(root, file))
+    
+    idx = 0
+    treated_files = []
+    while (idx < len(sql_files)):
+        file = sql_files[idx]
+        if "data" in file and file not in treated_files:
+            treated_files.append(file)
+            # Move the data files to the end of the list
+            file = sql_files.pop(idx)
+            sql_files.append(file)
+            idx -= 1
+        idx += 1
+
     return sql_files
 
 
@@ -42,7 +55,7 @@ def create_script_file(sql_files, build_name):
 
 def main():
     # Directory where the .sql files are located
-    directory = "./"
+    directory = ".\\"
     build_name = "script.sql"
 
     # Get all .sql files from the directory
