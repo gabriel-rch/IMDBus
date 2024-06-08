@@ -1,20 +1,32 @@
 # Script for generating random data for the database
 import random
 import sys
+import psycopg2
+from datetime import datetime, timedelta
+
+nome = ["Maria", "Ana", "Pedro", "Lucas", "Mariana", "Paulo", "Carlos", "Fernanda", "Rafael", "Gabriela", "Luiz", "Juliana", "Ricardo", "Amanda", "Marcos", "Camila", "Felipe", "Isabela", "Gustavo", "Rafaela"]
+sobrenome = ["Silva", "Santos", "Oliveira", "Souza", "Pereira", "Carvalho", "Costa", "Ferreira", "Rodrigues", "Almeida", "Nascimento", "Lima", "Melo", "Barros", "Cardoso", "Gomes", "Martins", "Rocha", "Ribeiro", "Alves", "Monteiro", "Mendes", "Moreira", "Batista"]
+
 
 def populate_motoristas(amount: int):
-    nome = ["João", "Maria", "José", "Ana", "Pedro", "Lucas", "Mariana", "Paulo", "Carlos", "Fernanda", "Rafael", "Gabriela", "Luiz", "Juliana", "Ricardo", "Amanda", "Marcos", "Camila", "Antônio", "Patrícia", "Felipe", "Isabela", "Gustavo", "Natália", "Rafaela"]
-    sobrenome = ["Silva", "Santos", "Oliveira", "Souza", "Pereira", "Carvalho", "Costa", "Ferreira", "Rodrigues", "Almeida", "Nascimento", "Lima", "Araújo", "Melo", "Barros", "Cardoso", "Gomes", "Martins", "Rocha", "Ribeiro", "Alves", "Monteiro", "Mendes", "Moreira", "Batista"]
-
     print("INSERT INTO Motoristas VALUES")
     for _ in range(amount):
         matricula = random.randint(10000, 99999)
         cpf = random.randint(11111111111, 99999999999)
         nome_completo = random.choice(nome) + " " + random.choice(sobrenome)
-        data_nascimento = f"{random.randint(1950, 2004)}-{random.randint(1, 12)}-{random.randint(0, 28)}"
+        data_nascimento = f"{random.randint(1950, 2004)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
 
         print(f"('{matricula}', '{cpf}', '{nome_completo}', '{data_nascimento}'),")
 
+
+def populate_passageiros(amount: int):
+    print("INSERT INTO Passageiros (cpf, nome, data_nascimento) VALUES")
+    for _ in range(amount):
+        cpf = random.randint(11111111111, 99999999999)
+        nome_completo = random.choice(nome) + " " + random.choice(sobrenome)
+        data_nascimento = f"{random.randint(1940, 2012)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
+
+        print(f"('{cpf}', '{nome_completo}', '{data_nascimento}'),")
 
 def populate_viagens():
     dates = ['2024-06-01', '2024-06-02', '2024-06-03', '2024-06-04', '2024-06-05', '2024-06-06', '2024-06-07', '2024-06-08', '2024-06-09', '2024-06-10', '2024-06-11', '2024-06-12', '2024-06-13', '2024-06-14', '2024-06-15', '2024-06-16', '2024-06-17', '2024-06-18', '2024-06-19', '2024-06-20', '2024-06-21', '2024-06-22', '2024-06-23', '2024-06-24', '2024-06-25', '2024-06-26', '2024-06-27', '2024-06-28', '2024-06-29', '2024-06-30']
@@ -49,15 +61,50 @@ def populate_onibus(amount: int):
         print(f"('{placa}', '{marca}', '{modelo}'),")
 
 
+def populate_embarques():
+    conn = psycopg2.connect("dbname=imdbus user=postgres password=postgres")
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT COUNT(*) FROM Viagens")
+    viagens = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(*) FROM Passageiros")
+    qtd_passageiros = cursor.fetchone()[0]
+    
+    print("INSERT INTO Embarques (id_viagem, id_passageiro, hora_embarque) VALUES")
+
+    # Para cada viagem
+    for id_viagem in range(1, 1940):
+        for _ in range(random.randint(30, 50)):
+            id_passageiro = random.randint(1, qtd_passageiros)
+
+            cursor.execute(f"SELECT hora_viagem::time FROM Viagens WHERE id_viagem = {id_viagem}")
+            viagem_ini = cursor.fetchone()[0]
+            
+            cursor.execute(f"SELECT hora_viagem::date FROM Viagens WHERE id_viagem = {id_viagem}")
+            data_viagem = cursor.fetchone()[0]
+
+            cursor.execute(f"SELECT duracao FROM Viagens JOIN Linhas USING(id_linha) WHERE id_viagem = {id_viagem}")
+            viagem_duracao = cursor.fetchone()[0]
+
+            hora_embarque = timedelta(hours=viagem_ini.hour, minutes=viagem_ini.minute) + timedelta(minutes=random.randint(0, int(viagem_duracao.total_seconds()//60)))
+
+            print(f"({id_viagem}, {id_passageiro}, '{data_viagem} {hora_embarque}'),")
+
+
 def main():
     args = sys.argv[1:]
 
     if args[0] == "motoristas":
         populate_motoristas(25)
+    elif args[0] == "passageiros":
+        populate_passageiros(10000)
     elif args[0] == "viagens":
         populate_viagens()
     elif args[0] == "onibus":
         populate_onibus(30)
+    elif args[0] == "embarques":
+        populate_embarques()
     else:
         print("Invalid arguments")
 

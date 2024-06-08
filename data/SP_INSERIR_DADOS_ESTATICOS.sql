@@ -70,7 +70,7 @@ BEGIN
     ('QMI-9910', 'Scania', 'W9');
 
     INSERT INTO Tarifas (descricao, valor_inteira, valor_meia) VALUES
-    ('Circular', 2.20, 1.10),
+    ('Circular', 0.50, 0.25),
     ('Urbano', 3.50, 1.75),
     ('Intermunicipal', 4.0, 2.0);
 
