@@ -21,8 +21,8 @@ BEGIN
 	-- PREENCHER TABELAS TEMPORARIAS COM MOTORISTAS E ONIBUS DISPONIVEIS
 	INSERT INTO temp_motoristas
 	SELECT id_motorista, data_quadro
-	FROM vw_ch_motorista 
-	INNER JOIN Motoristas USING(matricula)
+	FROM Motoristas 
+	LEFT JOIN vw_ch_motorista USING(matricula)
 	ORDER BY ch ASC;
 
 	INSERT INTO temp_onibus

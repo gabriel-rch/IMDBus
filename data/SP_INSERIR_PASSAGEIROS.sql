@@ -1,3 +1,5 @@
+DELETE FROM Passageiros;
+
 INSERT INTO Passageiros (cpf, nome, data_nascimento) VALUES
 ('42734053721', 'Rafael Melo', '2008-3-24'),
 ('78333127634', 'Rafael Mendes', '1999-2-1'),

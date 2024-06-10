@@ -8,7 +8,6 @@ BEGIN
     DELETE FROM Onibus;
     DELETE FROM Tarifas;
     DELETE FROM Motoristas;
-    DELETE FROM Passageiros;
 
     INSERT INTO Motoristas (matricula, cpf, nome, data_nascimento) VALUES
     ('38415',  '11591309530',  'Fernanda Gomes', '1955-5-11'),

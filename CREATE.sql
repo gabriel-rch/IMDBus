@@ -24,7 +24,7 @@ CREATE TABLE Onibus (
 	marca VARCHAR(50),
 	modelo VARCHAR(50),
 	quilometragem INT,
-	status VARCHAR(10) CHECK(status IN ('DISPONIVEL', 'EM VIAGEM', 'MANUTENCAO'))
+	status VARCHAR(10) CHECK(status IN ('DISPONIVEL', 'MANUTENCAO'))
 );
 
 CREATE TABLE Tarifas (

@@ -1,6 +1,20 @@
 import os
 import datetime
 
+def move_to_end(sql_files, filename):
+    idx = 0
+    treated_files = []
+    while (idx < len(sql_files)):
+        file = sql_files[idx]
+        if filename in file and file not in treated_files:
+            treated_files.append(file)
+            # Move the files to the end of the list
+            file = sql_files.pop(idx)
+            sql_files.append(file)
+            idx -= 1
+        idx += 1
+
+
 # Function to get all .sql files from a directory
 def get_sql_files(directory):
     sql_files = []
@@ -9,17 +23,8 @@ def get_sql_files(directory):
             if file.endswith(".sql"):
                 sql_files.append(os.path.join(root, file))
     
-    idx = 0
-    treated_files = []
-    while (idx < len(sql_files)):
-        file = sql_files[idx]
-        if "data" in file and file not in treated_files:
-            treated_files.append(file)
-            # Move the data files to the end of the list
-            file = sql_files.pop(idx)
-            sql_files.append(file)
-            idx -= 1
-        idx += 1
+    move_to_end(sql_files, "data")
+    move_to_end(sql_files, "INSERIR_EMBARQUES")
 
     return sql_files
 
