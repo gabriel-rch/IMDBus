@@ -9,4 +9,5 @@ FROM Viagens
 LEFT JOIN Linhas USING(id_linha)
 LEFT JOIN Motoristas USING(id_motorista)
 LEFT JOIN Onibus USING(id_onibus)
-WHERE hora_viagem::date = CURRENT_DATE;
+WHERE hora_viagem::date = CURRENT_DATE
+ORDER BY hora_viagem;

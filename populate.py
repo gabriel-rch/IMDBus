@@ -24,7 +24,14 @@ def populate_passageiros(amount: int):
     for _ in range(amount):
         cpf = random.randint(11111111111, 99999999999)
         nome_completo = random.choice(nome) + " " + random.choice(sobrenome)
-        data_nascimento = f"{random.randint(1940, 2012)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
+        
+        beneficio = random.choice(['meia', 'inteira', 'gratuita'])
+        if beneficio == 'meia':
+            data_nascimento = f"{random.randint(2007, 2012)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
+        elif beneficio == 'inteira':
+            data_nascimento = f"{random.randint(1960, 2006)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
+        else:
+            data_nascimento = f"{random.randint(1940, 1959)}-{random.randint(1, 12)}-{random.randint(1, 28)}"
 
         print(f"('{cpf}', '{nome_completo}', '{data_nascimento}'),")
 
@@ -69,13 +76,13 @@ def populate_embarques():
     viagens = cursor.fetchone()[0]
 
     cursor.execute("SELECT COUNT(*) FROM Passageiros")
-    qtd_passageiros = cursor.fetchone()[0]
+    qtd_passageiros = 500
     
     print("INSERT INTO Embarques (id_viagem, id_passageiro, hora_embarque) VALUES")
 
     # Para cada viagem
-    for id_viagem in range(1, 1940):
-        for _ in range(random.randint(30, 50)):
+    for id_viagem in range(1, 278):
+        for _ in range(random.randint(15, 30)):
             id_passageiro = random.randint(1, qtd_passageiros)
 
             cursor.execute(f"SELECT hora_viagem::time FROM Viagens WHERE id_viagem = {id_viagem}")
@@ -98,7 +105,7 @@ def main():
     if args[0] == "motoristas":
         populate_motoristas(25)
     elif args[0] == "passageiros":
-        populate_passageiros(10000)
+        populate_passageiros(500)
     elif args[0] == "viagens":
         populate_viagens()
     elif args[0] == "onibus":
